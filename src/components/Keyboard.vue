@@ -37,6 +37,7 @@ const props = defineProps(["guesses"]);
       <KeyboardKey :guesses="guesses" keyCode="66" label="B" />
       <KeyboardKey :guesses="guesses" keyCode="78" label="N" />
       <KeyboardKey :guesses="guesses" keyCode="77" label="M" />
+      <KeyboardKey keyCode="8" label="«" type="error" />
     </div>
     <div class="keyboard-row controls">
       <KeyboardKey keyCode="187" label="Correct [+]" type="success" />
