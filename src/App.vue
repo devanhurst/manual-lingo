@@ -1,51 +1,53 @@
 <script setup>
 import { ref } from "vue";
-import { NButton } from "naive-ui";
+import { NConfigProvider, darkTheme } from "naive-ui";
+import Keyboard from "./components/Keyboard.vue";
+import Letter from "./components/Letter.vue";
 
-const currentLetter = ref(1);
+const currentGuessIndex = ref(0);
+const currentLetterIndex = ref(0);
+const wordLength = 5;
+
+const emptyGuess = {
+  correctLetter: false,
+  correctPosition: false,
+  value: "",
+};
+
+const generateNewGuess = () => new Array(wordLength).fill({ ...emptyGuess });
+
+const guesses = ref([generateNewGuess()]);
 
 const moveToNextLetter = () => {
-  if (currentLetter.value < 26) {
-    currentLetter.value++;
+  if (currentLetterIndex.value < wordLength - 1) {
+    currentLetterIndex.value++;
   }
-  focusOnCurrentLetter();
 };
 
 const moveToPreviousLetter = () => {
-  if (currentLetter.value > 1) {
-    currentLetter.value--;
+  if (currentLetterIndex.value > 0) {
+    currentLetterIndex.value--;
   }
-  focusOnCurrentLetter();
 };
 
-const moveToLetterAbove = () => {
-  if (currentLetter.value > 5) {
-    currentLetter.value -= 5;
+const moveToPreviousGuess = () => {
+  if (currentGuessIndex.value > 0) {
+    currentGuessIndex.value -= 1;
   }
-  focusOnCurrentLetter();
 };
 
-const moveToLetterBelow = () => {
-  if (currentLetter.value < 21) {
-    currentLetter.value += 5;
+const moveToNextGuess = () => {
+  if (currentGuessIndex.value === guesses.value.length - 1) {
+    guesses.value.push(generateNewGuess());
   }
-  focusOnCurrentLetter();
+
+  if (currentGuessIndex.value < guesses.value.length - 1) {
+    currentGuessIndex.value += 1;
+  }
 };
 
 const moveToBeginningOfRow = () => {
-  currentLetter.value = Math.floor((currentLetter.value - 1) / 5) * 5 + 1;
-  focusOnCurrentLetter();
-};
-
-const focusOnCurrentLetter = () => {
-  const currentLetterInput = document.getElementById(
-    `letter-${currentLetter.value}`
-  );
-  currentLetterInput.select();
-};
-
-const handleClick = (event) => {
-  currentLetter.value = event.target.id.split("-")[1];
+  currentLetterIndex.value = 0;
 };
 
 const isAlphabetic = (key) => {
@@ -53,34 +55,70 @@ const isAlphabetic = (key) => {
 };
 
 const markAsCorrect = () => {
-  const currentLetterInput = document.getElementById(
-    `letter-${currentLetter.value}`
-  );
-  currentLetterInput.classList.remove("almost");
-  currentLetterInput.classList.add("correct");
+  const existingGuess =
+    guesses.value[currentGuessIndex.value][currentLetterIndex.value];
+  guesses.value[currentGuessIndex.value][currentLetterIndex.value] = {
+    ...existingGuess,
+    correctLetter: true,
+    correctPosition: true,
+  };
 
-  moveToNextLetter();
+  if (currentLetterIndex.value === wordLength - 1) {
+    moveToNextGuess();
+    moveToBeginningOfRow();
+  } else {
+    moveToNextLetter();
+  }
 };
 
 const markAsAlmost = () => {
-  const currentLetterInput = document.getElementById(
-    `letter-${currentLetter.value}`
-  );
-  currentLetterInput.classList.remove("correct");
-  currentLetterInput.classList.add("almost");
+  const existingGuess =
+    guesses.value[currentGuessIndex.value][currentLetterIndex.value];
+  guesses.value[currentGuessIndex.value][currentLetterIndex.value] = {
+    ...existingGuess,
+    correctLetter: true,
+    correctPosition: false,
+  };
 
-  moveToNextLetter();
+  if (currentLetterIndex.value === wordLength - 1) {
+    moveToNextGuess();
+    moveToBeginningOfRow();
+  } else {
+    moveToNextLetter();
+  }
 };
 
 const markAsNothing = () => {
-  const currentLetterInput = document.getElementById(
-    `letter-${currentLetter.value}`
-  );
+  const existingGuess =
+    guesses.value[currentGuessIndex.value][currentLetterIndex.value];
+  guesses.value[currentGuessIndex.value][currentLetterIndex.value] = {
+    ...existingGuess,
+    correctLetter: false,
+    correctPosition: false,
+  };
 
-  currentLetterInput.classList.remove("correct");
-  currentLetterInput.classList.remove("almost");
+  if (currentLetterIndex.value === wordLength - 1) {
+    moveToNextGuess();
+    moveToBeginningOfRow();
+  } else {
+    moveToNextLetter();
+  }
+};
 
-  moveToNextLetter();
+const setLetter = (letter) => {
+  const existingGuess =
+    guesses.value[currentGuessIndex.value][currentLetterIndex.value];
+  guesses.value[currentGuessIndex.value][currentLetterIndex.value] = {
+    ...existingGuess,
+    letter: letter.toUpperCase(),
+  };
+};
+
+const resetGame = () => {
+  guesses.value = [generateNewGuess()];
+
+  currentGuessIndex.value = 0;
+  currentLetterIndex.value = 0;
 };
 
 const handleKeydown = (event) => {
@@ -88,11 +126,11 @@ const handleKeydown = (event) => {
 
   const keyCode = event.keyCode;
   const key = event.key;
-  console.log(keyCode);
 
   if (isAlphabetic(key)) {
-    event.target.value = event.key.toUpperCase();
-    if (currentLetter.value % 5 === 0) {
+    setLetter(key);
+
+    if (currentLetterIndex.value === wordLength - 1) {
       moveToBeginningOfRow();
     } else {
       moveToNextLetter();
@@ -100,114 +138,114 @@ const handleKeydown = (event) => {
     return;
   }
 
-  // Backspace
-  if (keyCode === 8) {
-    event.target.value = "";
+  switch (keyCode) {
+    // Backspace
+    case 8: {
+      guesses.value[currentGuessIndex.value][currentLetterIndex.value] = {
+        correctLetter: false,
+        correctPosition: false,
+        letter: "",
+      };
 
-    const currentLetterInput = document.getElementById(
-      `letter-${currentLetter.value}`
-    );
-    currentLetterInput.classList.remove("correct");
-    currentLetterInput.classList.remove("almost");
-
-    moveToPreviousLetter();
-    return;
-  }
-
-  // Mark as correct and move when pressing +=
-  if (keyCode === 187) {
-    markAsCorrect();
-  }
-
-  // Mark as correct/incorrect when  -_
-  if (keyCode === 189) {
-    markAsAlmost();
-  }
-
-  if (keyCode === 32) {
-    markAsNothing();
-  }
-
-  if (keyCode === 39) {
-    moveToNextLetter();
-  }
-
-  if (keyCode === 37) {
-    moveToPreviousLetter();
-  }
-
-  if (keyCode === 38) {
-    moveToLetterAbove();
-  }
-
-  if (keyCode === 40) {
-    moveToLetterBelow();
+      moveToPreviousLetter();
+      break;
+    }
+    //  +=
+    case 187: {
+      markAsCorrect();
+      break;
+    }
+    // Mark as correct/incorrect when  -_
+    case 189: {
+      markAsAlmost();
+      break;
+    }
+    // Spacebar
+    case 32: {
+      markAsNothing();
+      break;
+    }
+    // Left arrow
+    case 37: {
+      moveToPreviousLetter();
+      break;
+    }
+    // Up arrow
+    case 38: {
+      moveToPreviousGuess();
+      break;
+    }
+    // Right arrow
+    case 39: {
+      moveToNextLetter();
+      break;
+    }
+    // Down arrow
+    case 40: {
+      moveToNextGuess();
+      break;
+    }
+    // ESC
+    case 27: {
+      resetGame();
+      break;
+    }
   }
 };
 
 setTimeout(() => {
-  focusOnCurrentLetter();
-}, 200);
+  document.addEventListener("keydown", handleKeydown);
+}, 100);
 </script>
 
 <template>
-  <main>
-    <div class="grid">
-      <input
-        v-for="i in 25"
-        :id="`letter-${i}`"
-        maxlength="1"
-        @keydown="handleKeydown"
-        @click="handleClick"
-        class="letter"
-      />
-    </div>
+  <n-config-provider :theme="darkTheme">
+    <main>
+      <div class="game-wrapper">
+        <div class="grid">
+          <div class="guess" v-for="(guess, guessIndex) in guesses">
+            <Letter
+              v-for="(letter, letterIndex) in guess"
+              :letter="letter.letter"
+              :correctPosition="letter.correctPosition"
+              :correctLetter="letter.correctLetter"
+              :selected="
+                currentGuessIndex === guessIndex &&
+                currentLetterIndex === letterIndex
+              "
+            />
+          </div>
+        </div>
 
-    <n-button class="button" type="success" @click="markAsCorrect"
-      >Correct Letter, Correct Position [+]</n-button
-    >
-    <n-button class="button" type="warning" @click="markAsAlmost"
-      >Correct Letter, Incorrect Position [-]</n-button
-    >
-    <n-button class="button" type="info" @click="markAsNothing"
-      >Incorrect Letter [Space]</n-button
-    >
-  </main>
+        <Keyboard :guesses="guesses" />
+      </div>
+    </main>
+  </n-config-provider>
 </template>
 
 <style scoped>
 main {
-  margin: auto;
-  width: 50%;
+  display: flex;
+  justify-content: end;
+  align-items: end;
+  flex-direction: column;
+  height: 100vh;
+  padding-bottom: 20px;
 }
 
 .grid {
-  display: grid;
-  grid-template-columns: repeat(5, 20%);
-  grid-template-rows: repeat(5, 20%);
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
   margin-bottom: 10px;
 }
-.letter {
-  font-size: 4rem;
-  text-align: center;
-  border: 3px solid black;
-  color: black;
+
+.guess {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
 }
 
-.letter.correct {
-  background-color: #18a058;
-  color: white;
-}
-
-.letter.almost {
-  background-color: #f0a020;
-  color: white;
-}
-
-.letter.nothing {
-  background-color: #2080f0;
-  color: white;
-}
 .button {
   width: 100%;
   margin-bottom: 5px;
