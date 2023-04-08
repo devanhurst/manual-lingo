@@ -193,6 +193,11 @@ const handleKeydown = (event) => {
   }
 };
 
+const handleClick = (guessIndex, letterIndex) => {
+  currentGuessIndex.value = guessIndex;
+  currentLetterIndex.value = letterIndex;
+};
+
 setTimeout(() => {
   document.addEventListener("keydown", handleKeydown);
 }, 100);
@@ -207,6 +212,7 @@ setTimeout(() => {
             <Letter
               v-for="(letter, letterIndex) in guess"
               :letter="letter.letter"
+              @click="handleClick(guessIndex, letterIndex)"
               :correctPosition="letter.correctPosition"
               :correctLetter="letter.correctLetter"
               :selected="
