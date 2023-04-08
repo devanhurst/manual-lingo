@@ -235,7 +235,7 @@ main {
   justify-content: end;
   align-items: end;
   flex-direction: column;
-  height: 100vh;
+  height: 100svh;
   padding-bottom: 20px;
 }
 
