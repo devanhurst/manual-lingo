@@ -103,6 +103,13 @@ const handleKeydown = (event) => {
   // Backspace
   if (keyCode === 8) {
     event.target.value = "";
+
+    const currentLetterInput = document.getElementById(
+      `letter-${currentLetter.value}`
+    );
+    currentLetterInput.classList.remove("correct");
+    currentLetterInput.classList.remove("almost");
+
     moveToPreviousLetter();
     return;
   }
