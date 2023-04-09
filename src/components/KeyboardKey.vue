@@ -1,11 +1,11 @@
 <script setup>
 import { NButton } from "naive-ui";
 import { computed } from "vue";
-const props = defineProps(["keyCode", "label", "type", "guesses"]);
+const props = defineProps(["code", "label", "type", "guesses"]);
 
 const handleClick = () => {
   document.dispatchEvent(
-    new KeyboardEvent("keydown", { keyCode: props.keyCode, key: props.label })
+    new KeyboardEvent("keydown", { code: props.code, key: props.label })
   );
 };
 

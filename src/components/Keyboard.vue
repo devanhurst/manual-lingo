@@ -7,45 +7,45 @@ const props = defineProps(["guesses"]);
 <template>
   <div class="keyboard">
     <div class="keyboard-row">
-      <KeyboardKey :guesses="guesses" keyCode="81" label="Q" />
-      <KeyboardKey :guesses="guesses" keyCode="87" label="W" />
-      <KeyboardKey :guesses="guesses" keyCode="69" label="E" />
-      <KeyboardKey :guesses="guesses" keyCode="82" label="R" />
-      <KeyboardKey :guesses="guesses" keyCode="84" label="T" />
-      <KeyboardKey :guesses="guesses" keyCode="89" label="Y" />
-      <KeyboardKey :guesses="guesses" keyCode="85" label="U" />
-      <KeyboardKey :guesses="guesses" keyCode="73" label="I" />
-      <KeyboardKey :guesses="guesses" keyCode="79" label="O" />
-      <KeyboardKey :guesses="guesses" keyCode="80" label="P" />
+      <KeyboardKey :guesses="guesses" code="KeyQ" label="Q" />
+      <KeyboardKey :guesses="guesses" code="KeyW" label="W" />
+      <KeyboardKey :guesses="guesses" code="KeyE" label="E" />
+      <KeyboardKey :guesses="guesses" code="KeyR" label="R" />
+      <KeyboardKey :guesses="guesses" code="KeyT" label="T" />
+      <KeyboardKey :guesses="guesses" code="KeyY" label="Y" />
+      <KeyboardKey :guesses="guesses" code="KeyU" label="U" />
+      <KeyboardKey :guesses="guesses" code="KeyI" label="I" />
+      <KeyboardKey :guesses="guesses" code="KeyO" label="O" />
+      <KeyboardKey :guesses="guesses" code="KeyP" label="P" />
     </div>
     <div class="keyboard-row">
-      <KeyboardKey :guesses="guesses" keyCode="65" label="A" />
-      <KeyboardKey :guesses="guesses" keyCode="83" label="S" />
-      <KeyboardKey :guesses="guesses" keyCode="68" label="D" />
-      <KeyboardKey :guesses="guesses" keyCode="70" label="F" />
-      <KeyboardKey :guesses="guesses" keyCode="71" label="G" />
-      <KeyboardKey :guesses="guesses" keyCode="72" label="H" />
-      <KeyboardKey :guesses="guesses" keyCode="74" label="J" />
-      <KeyboardKey :guesses="guesses" keyCode="75" label="K" />
-      <KeyboardKey :guesses="guesses" keyCode="76" label="L" />
+      <KeyboardKey :guesses="guesses" code="KeyA" label="A" />
+      <KeyboardKey :guesses="guesses" code="KeyS" label="S" />
+      <KeyboardKey :guesses="guesses" code="KeyD" label="D" />
+      <KeyboardKey :guesses="guesses" code="KeyF" label="F" />
+      <KeyboardKey :guesses="guesses" code="KeyG" label="G" />
+      <KeyboardKey :guesses="guesses" code="KeyH" label="H" />
+      <KeyboardKey :guesses="guesses" code="KeyJ" label="J" />
+      <KeyboardKey :guesses="guesses" code="KeyK" label="K" />
+      <KeyboardKey :guesses="guesses" code="KeyL" label="L" />
     </div>
     <div class="keyboard-row">
-      <KeyboardKey :guesses="guesses" keyCode="90" label="Z" />
-      <KeyboardKey :guesses="guesses" keyCode="88" label="X" />
-      <KeyboardKey :guesses="guesses" keyCode="67" label="C" />
-      <KeyboardKey :guesses="guesses" keyCode="86" label="V" />
-      <KeyboardKey :guesses="guesses" keyCode="66" label="B" />
-      <KeyboardKey :guesses="guesses" keyCode="78" label="N" />
-      <KeyboardKey :guesses="guesses" keyCode="77" label="M" />
-      <KeyboardKey keyCode="8" label="«" type="error" />
+      <KeyboardKey :guesses="guesses" code="KeyZ" label="Z" />
+      <KeyboardKey :guesses="guesses" code="KeyX" label="X" />
+      <KeyboardKey :guesses="guesses" code="KeyC" label="C" />
+      <KeyboardKey :guesses="guesses" code="KeyV" label="V" />
+      <KeyboardKey :guesses="guesses" code="KeyB" label="B" />
+      <KeyboardKey :guesses="guesses" code="KeyN" label="N" />
+      <KeyboardKey :guesses="guesses" code="KeyM" label="M" />
+      <KeyboardKey code="8" label="«" type="error" />
     </div>
     <div class="keyboard-row controls">
-      <KeyboardKey keyCode="187" label="Correct [+]" type="success" />
-      <KeyboardKey keyCode="189" label="Almost [-]" type="warning" />
-      <KeyboardKey keyCode="32" label="Incorrect [Space]" type="error" />
+      <KeyboardKey code="Digit1" label="Correct [1]" type="success" />
+      <KeyboardKey code="Digit2" label="Almost [2]" type="warning" />
+      <KeyboardKey code="Digit3" label="Incorrect [3]" type="error" />
     </div>
     <div class="keyboard-row controls">
-      <KeyboardKey keyCode="27" label="Reset [ESC]" type="default" />
+      <KeyboardKey code="Escape" label="Reset [ESC]" type="default" />
     </div>
   </div>
 </template>

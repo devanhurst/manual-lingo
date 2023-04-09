@@ -124,7 +124,7 @@ const resetGame = () => {
 const handleKeydown = (event) => {
   event.preventDefault();
 
-  const keyCode = event.keyCode;
+  const code = event.code;
   const key = event.key;
 
   if (isAlphabetic(key)) {
@@ -138,9 +138,8 @@ const handleKeydown = (event) => {
     return;
   }
 
-  switch (keyCode) {
-    // Backspace
-    case 8: {
+  switch (code) {
+    case "Backspace": {
       guesses.value[currentGuessIndex.value][currentLetterIndex.value] = {
         correctLetter: false,
         correctPosition: false,
@@ -150,43 +149,44 @@ const handleKeydown = (event) => {
       moveToPreviousLetter();
       break;
     }
-    //  +=
-    case 187: {
+
+    case "Digit1": {
       markAsCorrect();
       break;
     }
-    // Mark as correct/incorrect when  -_
-    case 189: {
+
+    case "Digit2": {
       markAsAlmost();
       break;
     }
-    // Spacebar
-    case 32: {
+
+    case "Digit3": {
       markAsNothing();
       break;
     }
-    // Left arrow
-    case 37: {
+
+    case "ArrowLeft": {
       moveToPreviousLetter();
       break;
     }
-    // Up arrow
-    case 38: {
+
+    case "ArrowUp": {
       moveToPreviousGuess();
       break;
     }
-    // Right arrow
-    case 39: {
+
+    case "Space":
+    case "ArrowRight": {
       moveToNextLetter();
       break;
     }
-    // Down arrow
-    case 40: {
+
+    case "ArrowDown": {
       moveToNextGuess();
       break;
     }
-    // ESC
-    case 27: {
+
+    case "Escape": {
       resetGame();
       break;
     }
@@ -239,11 +239,18 @@ main {
   padding-bottom: 20px;
 }
 
+.game-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
 .grid {
   display: flex;
-  justify-content: center;
   flex-direction: column;
   margin-bottom: 10px;
+  flex: 1;
+  justify-content: end;
 }
 
 .guess {
